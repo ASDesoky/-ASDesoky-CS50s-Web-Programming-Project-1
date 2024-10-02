@@ -10,3 +10,4 @@ def create(request):
         util.save_entry(title, content)
         return redirect("entry", title=title)
     return render(request, "encyclopedia/create.html")
+

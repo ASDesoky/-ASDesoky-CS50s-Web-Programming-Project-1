@@ -61,3 +61,21 @@ button:hover {
     color: red;
     margin-top: 10px;
 }
+
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+nav a, nav form {
+    margin-right: 10px;
+}
+

@@ -1,30 +1,22 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-    Edit
+    Edit Page - {{ entry }}
 {% endblock %}
 
-
 {% block body %}
-
     <h2>Edit Page</h2>
     <hr/>
 
-    <form action="{% url 'save' %}" method="POST">
-
+    <form action="{% url 'save' entry %}" method="POST">
         {% csrf_token %}
-
-        <input type="text" placeholder="Enter Title" name="title" value="{{entry}}">
+        <input type="text" placeholder="Enter Title" name="title" value="{{ entry }}">
         <br/>
-
-        <textarea type="text" placeholder="Enter Markdown Content" name="content">{{content}}</textarea>
-
+        <textarea type="text" placeholder="Enter Markdown Content" name="content">{{ content }}</textarea>
         <br/>
-
         <input type="submit" value="Save">
-
     </form>
 
+    <p><a href="{% url 'index' %}">Back to All Pages</a></p>
     <hr/>
-
 {% endblock %}

@@ -1,14 +1,10 @@
 {% extends "encyclopedia/layout.html" %}
 
-
 {% block title %}
-
-    Already Exists
-
+    Page Already Exists
 {% endblock %}
 
 {% block body %}
-
-    <h2>{{title}} already Exists.</h2>
-
+    <h2>{{ title }} already exists.</h2>
+    <p><a href="{% url 'index' %}">Back to All Pages</a></p>
 {% endblock %}

@@ -5,120 +5,102 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 import random
 
-
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
 
 def entry(request, entry):
-
-    apnaMarkdown=Markdown()
-    entryPage=util.get_entry(entry)
-
-    if entryPage:
-
-        return render(request, "encyclopedia/entry.html",
-            { "entry": apnaMarkdown.convert(entryPage), "entryTitle": entry })
-    
+    Markdown = Markdown()
+    entryPage = util.get_entry(entry)
+    if entryPage is None:
+        return render(request, "encyclopedia/noneExistingEntry.html", {
+             "entryTitle": entry
+        })
     else:
+        return render(request, "encyclopedia/entery.html", {
+            "entry": markdowner.convert(entryPage),
+            "entryTitle": entry
+        })
 
-        return render(request, "encyclopedia/notFound.html",{"entryTitle":entry})
-
-
-def search(request):
-
-    apnaMarkdown=Markdown()
-    # entriesList=util.list_entries()
-
-    if request.method=="POST":
-
-        entry=request.POST['q']
-        content=util.get_entry(entry)
-
-        if content:
-
-            return render(request, "encyclopedia/entry.html",
-            { "entry": apnaMarkdown.convert(content), "entryTitle": entry })
-
-        
+def newEntry(request):
+    if request.method == "POST":
+        form = newEntryForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            content = form.cleaned_data["content"]
+            return render(request, "encyclopedia/entry.html", {
+                "entry": apnaMarkdown.convert(content), 
+                "entryTitle": entry
+            })
         else:
-
-            listWithEntry=[]
-            allEntries=util.list_entries()
+            listWithEntry = []
+            allEntries = util.list_entries()
 
             for x in allEntries:
-
                 if entry.lower() in x.lower():
-
                     listWithEntry.append(x)
 
             if listWithEntry:
-
                 return render(request, "encyclopedia/searchResults.html", {
-                "entries": listWithEntry
-            })
-
+                    "entries": listWithEntry
+                })
             else:
-                
-                return render(request, "encyclopedia/notFound.html",{"entryTitle":entry})
-
+                return render(request, "encyclopedia/notFound.html", {
+                    "entryTitle": entry
+                })
 
 def createNewPage(request):
-
-    
-    if request.method=='GET':
-
+    if request.method == 'GET':
         return render(request, "encyclopedia/createNewPage.html")
-    
-    elif request.method=='POST':
+    elif request.method == 'POST':
+        apnaMarkdown = Markdown()
+        entriesList = util.list_entries()
 
-        apnaMarkdown=Markdown()
-        entriesList=util.list_entries()
-
-        title=request.POST['title']
-        content=request.POST['content']
+        title = request.POST['title']
+        content = request.POST['content']
 
         if title in entriesList:
-
-            return render(request, "encyclopedia/alreadyExists.html",{'title':title})
-        
+            return render(request, "encyclopedia/alreadyExists.html", {
+                'title': title
+            })
         else:
-
-            util.save_entry(title,content)
-            return render(request, "encyclopedia/entry.html",
-            { "entry": apnaMarkdown.convert(content), "entryTitle": title })
-
+            util.save_entry(title, content)
+            return render(request, "encyclopedia/entry.html", {
+                "entry": apnaMarkdown.convert(content), 
+                "entryTitle": title
+            })
 
 def edit(request):
+    if request.method == 'POST':
+        entry = request.POST['entryTitle']
+        content = util.get_entry(entry)
 
-    if request.method=='POST':
+        return render(request, 'encyclopedia/edit.html', {
+            'entry': entry, 
+            'content': content
+        })
 
-        entry=request.POST['entryTitle']
-        content=util.get_entry(entry)
-
-        return render(request, 'encyclopedia/edit.html',{'entry':entry, 'content':content})
-    
 def save(request):
+    title = request.POST['title']
+    content = request.POST['content']
+    util.save_entry(title, content)
 
-    title=request.POST['title']
-    content=request.POST['content']
-    util.save_entry(title,content)
+    apnaMarkdown = Markdown()
 
-    apnaMarkdown=Markdown()
-
-    return render(request, "encyclopedia/entry.html",
-            { "entry": apnaMarkdown.convert(content), "entryTitle": title })
-
+    return render(request, "encyclopedia/entry.html", {
+        "entry": apnaMarkdown.convert(content), 
+        "entryTitle": title
+    })
 
 def randomPage(request):
+    allEntries = util.list_entries()
+    entry = random.choice(allEntries)
+    content = util.get_entry(entry)
 
-    allEntries=util.list_entries()
-    entry=random.choice(allEntries)
+    apnaMarkdown = Markdown()
 
-    content=util.get_entry(entry)
-
-    apnaMarkdown=Markdown()
-
-    return render(request, "encyclopedia/entry.html",
-            { "entry": apnaMarkdown.convert(content), "entryTitle": entry })
+    return render(request, "encyclopedia/entry.html", {
+        "entry": apnaMarkdown.convert(content), 
+        "entryTitle": entry
+    })

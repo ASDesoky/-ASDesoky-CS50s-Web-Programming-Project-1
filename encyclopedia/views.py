@@ -11,29 +11,29 @@ def index(request):
     })
 
 def entry(request, entry):
-    Markdown = Markdown()
+    markdowner = Markdown()
     entryPage = util.get_entry(entry)
     if entryPage is None:
         return render(request, "encyclopedia/noneExistingEntry.html", {
              "entryTitle": entry
         })
     else:
-        return render(request, "encyclopedia/entery.html", {
-            "entry": markdowner.convert(entryPage),
+        return render(request, "encyclopedia/entry.html", {
+            "entry": markdowner.convert(entryPage), # type: ignore
             "entryTitle": entry
         })
 
 def newEntry(request):
     if request.method == "POST":
-        form = newEntryForm(request.POST)
+        form = newEntryForm(request.POST) # type: ignore
         if form.is_valid():
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
-            if (util.get_entry (title) is None or form.cleane data ["edit"] is True)
-            return render(request, "encyclopedia/entry.html", {
-                "entry": apnaMarkdown.convert(content),  # type: ignore
-                "entryTitle": entry
-            })
+            if util.get_entry(title) is None or form.cleaned_data["edit"] is True:
+                return render(request, "encyclopedia/entry.html", {
+                    "entry": Markdown().convert(content),  # type: ignore
+                    "entryTitle": title
+                })
         else:
             listWithEntry = []
             allEntries = util.list_entries()

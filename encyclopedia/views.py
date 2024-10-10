@@ -29,7 +29,7 @@ def newEntry(request):
         if form.is_valid():
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
-            if(util.get_entry (title) is None or form.cleane data ["edit"] is True):
+            if (util.get_entry (title) is None or form.cleane data ["edit"] is True)  
             return render(request, "encyclopedia/entry.html", {
                 "entry": apnaMarkdown.convert(content), 
                 "entryTitle": entry

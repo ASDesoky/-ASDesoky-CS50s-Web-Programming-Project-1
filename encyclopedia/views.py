@@ -25,12 +25,12 @@ def entry(request, entry):
 
         return render(request, "encyclopedia/notFound.html",{"entryTitle":entry})
 
-
 def search(request):
-
+    value = request.GET.get('q','')
+    if (util.get_entry(value)is not None):
+        return HttpResponseRedirect(reverse("entry", kwargs={'entry' : value }))
     apnaMarkdown=Markdown()
     # entriesList=util.list_entries()
-
     if request.method=="POST":
 
         entry=request.POST['q']

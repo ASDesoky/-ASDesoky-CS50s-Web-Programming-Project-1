@@ -65,8 +65,7 @@ def search(request):
 
 
 def createNewPage(request):
-
-    
+ 
     if request.method=='GET':
 
         return render(request, "encyclopedia/createNewPage.html")

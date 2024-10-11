@@ -116,4 +116,4 @@ def random(request):
     content=util.get_entry(entry)
     apnaMarkdown=Markdown()
     return render(request, "encyclopedia/entry.html",
-            { "entry": apnaMarkdown.convert(content), "entryTitle": entry })
+            { "entry": apnaMarkdown.convert(content), "entryTitle": entry }) 
